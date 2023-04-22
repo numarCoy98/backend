@@ -1,6 +1,7 @@
 const { response } = require('express') //para el intelices 
 const Usuario = require('../models/user')
 const bcrypt = require('bcryptjs')
+const { generarJWT } = require('../helpers/jwt')
 
 
 const crearUsuario = async (req, res = response) => {
@@ -15,8 +16,8 @@ const crearUsuario = async (req, res = response) => {
         }
         console.log('crear usuario', { usuario })
         usuario = new Usuario(req.body);
-        // Encriptar contraseña
 
+        // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt)
 
@@ -49,7 +50,7 @@ const loginUsuario = async (req, res = response) => {
             });
         }
 
-        // confirmar los password
+        // confirmar el password
         const validPassword = bcrypt.compareSync(password, usuario.password)
         if (!validPassword) {
             return res.status(400).json({
@@ -57,14 +58,13 @@ const loginUsuario = async (req, res = response) => {
                 msg: 'Contraseña no valida'
             })
         }
-
         // Generar nuestro JWT
-
+        const token = await generarJWT(usuario.id, usuario.name)
         res.status(201).json({
             ok: true,
             uid: usuario.id,
             name: usuario.name,
-
+            token
         })
 
     } catch (error) {
@@ -76,8 +76,12 @@ const loginUsuario = async (req, res = response) => {
     }
 }
 
-const revalidarToken = (req, res) => {
-    res.json({ okay: true, msg: 'renew' })
+const revalidarToken = async (req, res) => {
+    const { uid, name } = req;
+
+    const token = await generarJWT(uid, name)
+
+    res.json({ okay: true, msg: 'renew', token })
 }
 
 module.exports = {
