@@ -22,7 +22,9 @@ app.use(express.static('public'));
 // Rutas
 // TODO: auth // crear usuarios, login, renew
 app.use('/api/auth', require('./routes/auth'));
+
 // TODO crud: Eventos
+app.use('/api/chat', require('./routes/chat'));
 
 app.listen(process.env.PORT, () => {
     console.log(`Servidor corriendo en el puerto ${process.env.PORT}`)
