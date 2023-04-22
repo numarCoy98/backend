@@ -16,6 +16,7 @@ router.post('/registro',
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
+        check('role', 'El rol es obligatorio').custom((value, { req }) => ['student', 'moderator'].some(role => role === value)),
         validarCampos
     ],
     crearUsuario

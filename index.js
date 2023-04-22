@@ -1,4 +1,5 @@
 const express = require('express');
+const { dbConnection } = require('./db/config');
 require('dotenv').config();
 
 // console.log(process.env)
@@ -7,6 +8,9 @@ console.log('Hola mundooo!!!!!')
 
 // Crear el servidor de express
 const app = express();
+
+// Base de datos
+dbConnection()
 
 // lectura y parseo del boby
 app.use(express.json())

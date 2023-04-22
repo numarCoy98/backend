@@ -1,8 +1,33 @@
 const { response } = require('express') //para el intelices 
+const Usuario = require('../models/user')
 
-const crearUsuario = (req, res = response) => {
-    const { name, email, password } = req.body
-    res.status(201).json({ ok: true, msg: 'registro', name, email, password })
+const crearUsuario = async (req, res = response) => {
+    const { email, password, role } = req.body
+    try {
+        let usuario = await Usuario.findOne({ email })
+        if (usuario) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Un usuario existe con ese correo'
+            });
+        }
+        console.log('crear usuario', { usuario })
+        usuario = new Usuario(req.body);
+        console.log({ usuario: usuario.id })
+        await usuario.save()
+        res.status(201).json({
+            ok: true,
+            msg: 'registro',
+            uid: usuario.id,
+            name: usuario.name
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            msg: 'Error con el servidor'
+        })
+    }
 
 }
 
