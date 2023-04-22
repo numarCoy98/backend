@@ -18,7 +18,7 @@ router.use(validarJWT); //validar siempre el token de todos los query que esten 
 
 router.post('/addMessage', [
     check('message', 'El mensaje no debe estar vacio').not().isEmpty(),
-    check('date', 'La fecha es obligatoria').isDate(),
+    check('date', 'La fecha es obligatoria').isInt(),
     validarCampos
 ], addMessage)
 
