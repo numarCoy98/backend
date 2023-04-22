@@ -25,6 +25,7 @@ const addMessage = async (req, res = response) => {
 }
 
 const getMessages = async (req, res = response) => {
+
     try {
         const messages = await Message.find({})
             .populate('user_id', ['name', 'role'])
