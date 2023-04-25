@@ -14,14 +14,12 @@ const crearUsuario = async (req, res = response) => {
                 msg: 'Un usuario existe con ese correo'
             });
         }
-        console.log('crear usuario', { usuario })
         usuario = new Usuario(req.body);
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt)
 
-        console.log({ usuario: usuario.id })
         await usuario.save()
         res.status(201).json({
             ok: true,
@@ -30,7 +28,6 @@ const crearUsuario = async (req, res = response) => {
             name: usuario.name
         })
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             ok: false,
             msg: 'Error con el servidor'
@@ -60,7 +57,6 @@ const loginUsuario = async (req, res = response) => {
         }
         // Generar nuestro JWT
         const token = await generarJWT(usuario.id, usuario.name)
-        console.log('logging')
         res.status(201).json({
             ok: true,
             uid: usuario.id,
@@ -69,7 +65,6 @@ const loginUsuario = async (req, res = response) => {
         })
 
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             ok: false,
             msg: 'Error con el servidor'

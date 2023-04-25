@@ -13,18 +13,14 @@ const server = http.createServer(app);
 // Configurar el cors para que reciba solo el del localHost
 const io = new SocketServer(server, {
     cors: {
-        // origin: `http://localhost:${process.env.PORT}`
-        origin: `*`
+        // origin: `process.env.SOCKET_API_CLIENT`
+        origin: '*'
     }
 });
 
-console.log(`http://localhost:${process.env.PORT}`)
 
 io.on('connection', (socket) => {
-    // console.log({ 'id': socket.id });
-    // console.log('a user connected', 'id', socket.id);
     socket.on('newMessage', (message) => {
-        console.log({ message })
         socket.broadcast.emit('newMessage', true)
     })
 });
